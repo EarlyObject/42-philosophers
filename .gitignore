@@ -1,0 +1,8 @@
+checklist/
+../.idea
+../checklist
+philo
+*.o
+.idea
+
+
