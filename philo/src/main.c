@@ -12,27 +12,6 @@
 
 #include "../include/philo.h"
 
-
-
-void *
-	philo_life(void *philosopher)
-{
-	t_philo	philo;
-	int i;
-
-	philo = *(t_philo *)philosopher;
-	i = philo.n_eat;
-	while (i > 0)
-	{
-		printf("%llu %d is sleeping\n", get_t_diff(philo.t_start), philo.num);
-		ms_sleep(philo.t_sleep * 1000);
-		printf("%llu %d is eating\n", get_t_diff(philo.t_start), philo.num);
-		ms_sleep(philo.t_eat * 1000);
-		i--;
-	}
-	return (NULL);
-}
-
 int
 	parse_args(int argc, char *argv[], int arr[])
 {
@@ -50,34 +29,39 @@ int
 		arr[i - 1] = num;
 		i++;
 	}
+	if (arr[4] < 0)
+		return (0); //доработать выход с ошибкой
 	if (i == 4)
 		arr[4] = -1;
 	return (1);
 }
 
 void
-	create_philos(int arr[], t_philo *ph_arr)
+	create_philos(int arr[], t_philo *ph_arr, pthread_mutex_t *forks)
 {
-	int	i;
+	int				i;
 	struct timeval	tv;
-	uint64_t start;
-	t_philo	philo;
+	uint64_t		start;
 
 	gettimeofday(&tv, NULL);
 	start = tv_to_ms(tv);
 	i = 0;
 	while (i < arr[0])
 	{
-		philo = ph_arr[i];
-		philo.num = i + 1;
-		philo.t_die = arr[1];
-		philo.t_eat = arr[2];
-		philo.t_sleep = arr[3];
+		ph_arr[i].n_philos = arr[0];
+		ph_arr[i].id = i;
+		ph_arr[i].t_die = arr[1];
+		ph_arr[i].t_eat = arr[2];
+		ph_arr[i].t_sleep = arr[3];
 		if (arr[4] >= 0)
-			philo.n_eat = arr[4];
-		philo.t_start = start;
-		pthread_create(&philo.pthread, NULL, &philo_life, &philo);
-		//pthread_join(th_philo, NULL);
+			ph_arr[i].n_meals = arr[4];
+		else
+			ph_arr[i].n_meals = -1;
+		ph_arr[i].have_eaten = 0;
+		ph_arr[i].t_start = start;
+		ph_arr[i].forks = forks;
+		pthread_mutex_init(&ph_arr[i].lock, NULL);
+		ph_arr[i].ph_arr = (void **)ph_arr;
 		i++;
 	}
 }
@@ -85,9 +69,10 @@ void
 int
 	main(int argc, char *argv[])
 {
-	int	arr[5];
-	int	i;
-	t_philo *ph_arr;
+	int				arr[5];
+	//int				i;
+	t_philo			*ph_arr;
+	pthread_mutex_t	*forks;
 
 	if (argc >= 5)
 	{
@@ -98,19 +83,27 @@ int
 			printf("ERROR\n");
 			exit(0);
 		}
+		forks = create_forks(arr[0]);
+		ph_arr = (t_philo *)malloc(sizeof(t_philo *) * arr[0]);
+
+		/*i = 0;
+		while (i < arr[0])
+		{
+			ph_arr[i] = *(t_philo *)malloc(arr[0] * sizeof(t_philo));
+			i++;
+		}*/
+		for(int i = 0; i < 5; ++i)
+		{
+			printf("%d\n", arr[i]);
+		}
+		create_philos(arr, ph_arr, forks);
+		launch_threads(ph_arr, arr[0]);
+		join_threads(ph_arr, arr[0]);
 	}
-	ph_arr = (t_philo *) malloc(sizeof(t_philo) * arr[0]);
-	for(int i = 0; i < 5; ++i)
+	else
 	{
-		printf("%d\n", arr[i]);
-	}
-	i = 0;
-	create_philos(arr, ph_arr);
-	i = 0;
-	while (i < arr[0])
-	{
-		pthread_join(ph_arr[i].pthread, NULL);
-		i++;
+		printf("Not sufficient arguments. Do: ./philo n_of_philosophers " \
+		"t_to_die t_to_eat t_to_sleep [n_each_philosopher_must_eat]\n");
 	}
 	return (0);
 }
