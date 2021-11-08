@@ -19,7 +19,7 @@ uint64_t
 }
 
 uint64_t
-	current_t(void )
+	current_t(void)
 {
 	struct timeval	tv;
 
