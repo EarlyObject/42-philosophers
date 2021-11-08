@@ -41,16 +41,19 @@ typedef struct s_info {
 	int				n_meals;
 	uint64_t		t_start;
 	bool			is_dead;
+	pthread_mutex_t	*lock;
+	int check;
+
 }	t_info;
 
 typedef struct s_philo {
 	int				id;
 	int				have_eaten;
 	uint64_t		t_meal;
-	t_info			info;
+	t_info			*info;
 	pthread_t		pthread;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	lock;
+//pthread_mutex_t	lock;
 	void			*ph_arr;
 }	t_philo;
 
