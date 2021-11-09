@@ -76,6 +76,7 @@ init_info(int *arr, uint64_t start, t_info *info)
 	if (pthread_mutex_init(info->lock, NULL))
 		//	printf("Mutex init error in ph_arr[%d]", i);
 		printf("Mutex init error");
+	info->n_full_philos = 0;
 	info->check = 0;
 
 }
@@ -90,7 +91,7 @@ init_philos(int n_philos, t_philo *ph_arr, pthread_mutex_t *forks, t_info *info)
 	{
 		ph_arr[i].id = i;
 		ph_arr[i].have_eaten = 0;
-		ph_arr[i].t_meal = 0;
+		ph_arr[i].t_meal = info->t_start;
 		ph_arr[i].info = info;
 		ph_arr[i].forks = forks;
 
@@ -123,7 +124,6 @@ int
 	//int				i;
 	t_philo			*ph_arr;
 	pthread_mutex_t	*forks;
-
 	if (argc >= 5)
 	{
 		if (parse_args(argc, argv, arr))
@@ -135,13 +135,6 @@ int
 		}
 		forks = create_forks(arr[0]);
 		ph_arr = (t_philo *)malloc(sizeof(t_philo *) * arr[0]);
-
-		/*i = 0;
-		while (i < arr[0])
-		{
-			ph_arr[i] = *(t_philo *)malloc(arr[0] * sizeof(t_philo));
-			i++;
-		}*/
 		for(int i = 0; i < 5; ++i)
 		{
 			printf("%d\n", arr[i]);

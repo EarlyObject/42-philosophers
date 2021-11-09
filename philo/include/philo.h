@@ -31,7 +31,7 @@
 # define EAT_MSG "is eating"
 # define SLEEP_MSG "is sleeping"
 # define THINK_MSG "is thinking"
-# define DIE_MSG " died"
+# define DIE_MSG "died"
 
 typedef struct s_info {
 	int				n_philos;
@@ -42,6 +42,7 @@ typedef struct s_info {
 	uint64_t		t_start;
 	bool			is_dead;
 	pthread_mutex_t	*lock;
+	int				n_full_philos;
 	int check;
 
 }	t_info;
@@ -64,12 +65,12 @@ uint64_t		get_t_diff(uint64_t start);
 uint64_t		current_t(void );
 void			launch_threads(t_philo *ph_arr, int n_philos);
 void			join_threads(t_philo *ph_arr, int n_philos);
-void			*philo_life(void *philosopher);
+void			*philo_life(void *p);
 pthread_mutex_t	*create_forks(int n_forks);
-void
-take_fork(t_philo philo, int fork);
-void
-take_forks(t_philo philo);
+void			take_fork(t_philo philo, int fork);
+void			take_forks(t_philo philo);
 void			drop_forks(t_philo philo);
-void			philo_log(uint64_t t_stamp, int ph_id, int action);
+void
+philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action, bool is_dead);
+
 #endif
