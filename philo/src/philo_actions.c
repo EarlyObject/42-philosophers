@@ -13,10 +13,10 @@
 #include "../include/philo.h"
 
 void
-	philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action, bool is_dead)
+	philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action)
 {
 	pthread_mutex_lock(info->lock);
-	if (!is_dead)
+	if (!info->is_dead)
 	{
 		if (action == FORK)
 			printf("%llu%s %d %s\n", t_stamp, "ms", ph_id, FORK_MSG);
@@ -33,24 +33,37 @@ void
 }
 
 void
-	take_fork(t_philo philo, int fork)
+	philo_log_death(uint64_t t_stamp, int ph_id)
 {
+	printf("%llu%s %d %s\n", t_stamp, "ms", ph_id, DIE_MSG);
+}
+
+void
+	take_fork(t_philo ph, int fork)
+{
+	if (ph.info->n_philos < 2)
+	{
+		ms_sleep(ph.info->t_die);
+		return ;
+	}
 	if (fork == LEFT)
 	{
-		if (!pthread_mutex_lock(&philo.forks[philo.id]))
-			philo_log(philo.info, get_t_diff(philo.info->t_start), philo.id + 1, FORK, philo.info->is_dead);
+		if (!pthread_mutex_lock(&ph.forks[ph.id]))
+			philo_log(ph.info, get_t_diff(ph.info->t_start), ph.id + 1, FORK);
 	}
 	else
 	{
-		if (philo.id == 0)
+		if (ph.id == 0)
 		{
-			if (!pthread_mutex_lock(&philo.forks[philo.info->n_philos - 1]))
-				philo_log(philo.info, get_t_diff(philo.info->t_start), philo.id + 1, FORK, philo.info->is_dead);
+			if (!pthread_mutex_lock(&ph.forks[ph.info->n_philos - 1]))
+				philo_log(ph.info, get_t_diff(ph.info->t_start),
+					ph.id + 1, FORK);
 		}
 		else
 		{
-			if (!pthread_mutex_lock(&philo.forks[philo.id - 1]))
-				philo_log(philo.info, get_t_diff(philo.info->t_start), philo.id + 1, FORK, philo.info->is_dead);
+			if (!pthread_mutex_lock(&ph.forks[ph.id - 1]))
+				philo_log(ph.info, get_t_diff(ph.info->t_start),
+					ph.id + 1, FORK);
 		}
 	}
 }
@@ -58,13 +71,6 @@ void
 void
 	take_forks(t_philo philo)
 {
-	if (philo.info->n_philos < 2)
-	{
-		ms_sleep(philo.info->t_sleep);
-	//	philo.info->is_dead = true;
-		return ;
-	}
-
 	if (philo.id % 2)
 	{
 		take_fork(philo, RIGHT);

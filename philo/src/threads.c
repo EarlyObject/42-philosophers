@@ -39,21 +39,12 @@ void
 }
 
 pthread_mutex_t
-	create_fork(void )
-{
-	pthread_mutex_t	fork;
-
-	pthread_mutex_init(&fork, NULL);
-	return (fork);
-}
-
-pthread_mutex_t *
-	create_forks(int n_forks)
+	*create_forks(int n_forks)
 {
 	pthread_mutex_t	*forks;
 	int				i;
 
-	forks = malloc(n_forks * sizeof(*forks));
+	forks = malloc(n_forks * sizeof(pthread_mutex_t));
 	i = 0;
 	while (i < n_forks)
 	{
@@ -62,4 +53,19 @@ pthread_mutex_t *
 		i++;
 	}
 	return (forks);
+}
+
+void
+	check_if_all_full(t_info *info)
+{
+	pthread_mutex_lock(info->lock);
+	if (info->n_full_philos == info->n_philos)
+	{
+		if (!info->is_dead)
+		{
+			printf("All philosophers have completed their meal\n");
+			info->is_dead = true;
+		}
+	}
+	pthread_mutex_unlock(info->lock);
 }

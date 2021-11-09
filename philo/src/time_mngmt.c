@@ -31,7 +31,7 @@ void
 	ms_sleep(uint64_t t_sleep)
 {
 	struct timeval	tv;
-	uint64_t start_t;
+	uint64_t		start_t;
 
 	gettimeofday(&tv, NULL);
 	start_t = tv_to_ms(tv);

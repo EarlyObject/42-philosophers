@@ -43,8 +43,6 @@ typedef struct s_info {
 	bool			is_dead;
 	pthread_mutex_t	*lock;
 	int				n_full_philos;
-	int check;
-
 }	t_info;
 
 typedef struct s_philo {
@@ -54,7 +52,6 @@ typedef struct s_philo {
 	t_info			*info;
 	pthread_t		pthread;
 	pthread_mutex_t	*forks;
-//pthread_mutex_t	lock;
 	void			*ph_arr;
 }	t_philo;
 
@@ -67,10 +64,12 @@ void			launch_threads(t_philo *ph_arr, int n_philos);
 void			join_threads(t_philo *ph_arr, int n_philos);
 void			*philo_life(void *p);
 pthread_mutex_t	*create_forks(int n_forks);
-void			take_fork(t_philo philo, int fork);
+void			take_fork(t_philo ph, int fork);
 void			take_forks(t_philo philo);
 void			drop_forks(t_philo philo);
-void
-philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action, bool is_dead);
+void			philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action);
+void			philo_log_death(uint64_t t_stamp, int ph_id);
+void			check_if_all_full(t_info *info);
+void			create_philos(int arr[], t_philo *ph_arr, pthread_mutex_t *forks);
 
 #endif
