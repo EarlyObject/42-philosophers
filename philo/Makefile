@@ -6,13 +6,14 @@
 #    By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/02 11:27:20 by asydykna          #+#    #+#              #
-#    Updated: 2021/11/02 11:28:23 by asydykna         ###   ########.fr        #
+#    Updated: 2021/11/10 13:43:58 by asydykna         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = philo
 
-SRC = main.c utils.c time_mngmt.c threads.c philo_life.c philo_actions.c inits.c
+SRC = main.c utils.c time_mngmt.c threads.c philo_life.c philo_actions.c \
+		inits.c
 
 OBJ = $(SRC:.c=.o)
 
@@ -27,7 +28,7 @@ VPATH = src include
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -g3 $(CFLAGS) $(OBJ) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) -o $(NAME)
 
 clean:
 	$(RM) $(OBJ)

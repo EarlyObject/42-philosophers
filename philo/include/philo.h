@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 11:27:51 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/02 11:27:52 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:39 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@
 # define EAT 1
 # define SLEEP 2
 # define THINK 3
-# define DIE 4
 # define FORK_MSG "has taken a fork"
 # define EAT_MSG "is eating"
 # define SLEEP_MSG "is sleeping"
@@ -52,7 +51,6 @@ typedef struct s_philo {
 	t_info			*info;
 	pthread_t		pthread;
 	pthread_mutex_t	*forks;
-	void			*ph_arr;
 }	t_philo;
 
 int				ft_atoi(const char *str);
@@ -67,9 +65,11 @@ pthread_mutex_t	*create_forks(int n_forks);
 void			take_fork(t_philo ph, int fork);
 void			take_forks(t_philo philo);
 void			drop_forks(t_philo philo);
-void			philo_log(t_info *info, uint64_t t_stamp, int ph_id, int action);
+void			philo_log(t_info *info, uint64_t t_stamp,
+					int ph_id, int action);
 void			philo_log_death(uint64_t t_stamp, int ph_id);
 void			check_if_all_full(t_info *info);
-void			create_philos(int arr[], t_philo *ph_arr, pthread_mutex_t *forks);
+void			create_philos(int arr[], t_philo *ph_arr,
+					pthread_mutex_t *forks);
 
 #endif

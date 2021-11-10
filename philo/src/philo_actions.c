@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/05 13:24:08 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/05 13:24:09 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:49 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ void
 			printf("%llu%s %d %s\n", t_stamp, "ms", ph_id, SLEEP_MSG);
 		else if (action == THINK)
 			printf("%llu%s %d %s\n", t_stamp, "ms", ph_id, THINK_MSG);
-		else if (action == DIE)
-			printf("%llu%s %d %s\n", t_stamp, "ms", ph_id, DIE_MSG);
 	}
 	pthread_mutex_unlock(info->lock);
 }

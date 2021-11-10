@@ -6,11 +6,17 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 11:27:29 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/02 11:27:30 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:46 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
+
+void
+	my_leaks(void)
+{
+	system("leaks philo");
+}
 
 int
 	parse_args(int argc, char *argv[], int arr[])
@@ -32,9 +38,20 @@ int
 		arr[i - 1] = num;
 		i++;
 	}
+	if (arr[0] <= 0)
+		return (0);
 	if (i == 5)
 		arr[4] = -1;
 	return (1);
+}
+
+void
+	clean_mem(pthread_mutex_t *forks, t_philo *ph_arr, t_info *info)
+{
+	free(forks);
+	free(ph_arr);
+	free(info->lock);
+	free(info);
 }
 
 int
@@ -53,6 +70,7 @@ int
 			create_philos(arr, ph_arr, forks);
 			launch_threads(ph_arr, arr[0]);
 			join_threads(ph_arr, arr[0]);
+			clean_mem(forks, ph_arr, ph_arr[0].info);
 		}
 		else
 			printf("Wrong program arguments\n");

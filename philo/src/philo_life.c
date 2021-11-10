@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 12:14:14 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/04 12:14:15 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:50 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ void
 		}
 		ph_sleep(philo);
 		ph_think(philo);
-		printf("%d have eaten %d times\n", philo->id + 1, philo->have_eaten);
 	}
 	return (NULL);
 }

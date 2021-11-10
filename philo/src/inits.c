@@ -6,14 +6,14 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 19:08:29 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/09 19:08:30 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:44 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
 void
-	init_info(int *arr, uint64_t start, t_info *info)
+	init_info(const int *arr, uint64_t start, t_info *info)
 {
 	info->n_philos = arr[0];
 	info->t_die = arr[1];
@@ -46,7 +46,6 @@ void
 		ph_arr[i].t_meal = info->t_start;
 		ph_arr[i].info = info;
 		ph_arr[i].forks = forks;
-		ph_arr[i].ph_arr = (void *)ph_arr;
 		i++;
 	}
 }
@@ -63,4 +62,21 @@ void
 	info = (t_info *) malloc(sizeof(t_info));
 	init_info(arr, start, info);
 	init_philos(arr[0], ph_arr, forks, info);
+}
+
+pthread_mutex_t
+	*create_forks(int n_forks)
+{
+	pthread_mutex_t	*forks;
+	int				i;
+
+	forks = malloc(n_forks * sizeof(pthread_mutex_t));
+	i = 0;
+	while (i < n_forks)
+	{
+		if (pthread_mutex_init(&forks[i], NULL))
+			printf("Mutex init error");
+		i++;
+	}
+	return (forks);
 }

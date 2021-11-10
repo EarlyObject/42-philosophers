@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/04 09:49:27 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/04 09:49:28 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/10 13:43:52 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,23 +36,6 @@ void
 		pthread_join(ph_arr[i].pthread, NULL);
 		i++;
 	}
-}
-
-pthread_mutex_t
-	*create_forks(int n_forks)
-{
-	pthread_mutex_t	*forks;
-	int				i;
-
-	forks = malloc(n_forks * sizeof(pthread_mutex_t));
-	i = 0;
-	while (i < n_forks)
-	{
-		if (pthread_mutex_init(&forks[i], NULL))
-			printf("Mutex init error");
-		i++;
-	}
-	return (forks);
 }
 
 void
