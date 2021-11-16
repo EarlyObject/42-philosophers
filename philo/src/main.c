@@ -19,6 +19,21 @@ void
 }
 
 int
+	check_args(const char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+int
 	parse_args(int argc, char *argv[], int arr[])
 {
 	int	i;
@@ -30,15 +45,15 @@ int
 	i = 1;
 	while (i < argc)
 	{
-		if (i == 6)
-			break ;
+		if (!check_args(argv[i]))
+			return (0);
 		num = ft_atoi(argv[i]);
 		if (num < 0)
 			return (0);
 		arr[i - 1] = num;
 		i++;
 	}
-	if (arr[0] <= 0)
+	if (arr[0] <= 0 || arr[0] > 200)
 		return (0);
 	if (i == 5)
 		arr[4] = -1;
@@ -61,7 +76,7 @@ int
 	t_philo			*ph_arr;
 	pthread_mutex_t	*forks;
 
-	if (argc >= 5)
+	if (argc >= 5 && argc <= 6)
 	{
 		if (parse_args(argc, argv, arr))
 		{
@@ -77,7 +92,7 @@ int
 	}
 	else
 	{
-		printf("Not sufficient arguments. Do: ./philo n_of_philosophers " \
+		printf("Wrong arguments. Do: ./philo n_of_philosophers " \
 		"t_to_die t_to_eat t_to_sleep [n_each_philosopher_must_eat]\n");
 	}
 	return (0);
