@@ -16,15 +16,13 @@ void
 	*life_checker(void *p_philo)
 {
 	t_philo		*ph;
-	uint64_t	t_current;
 
 	ph = (t_philo *)p_philo;
 	while (true)
 	{
-		t_current = current_t();
-		if (!pthread_mutex_lock(ph->info->lock))
+		if ((int)get_t_diff(ph->t_meal) >= ph->info->t_die)
 		{
-			if ((int)(t_current - ph->t_meal) >= ph->info->t_die)
+			if (!pthread_mutex_lock(ph->info->lock))
 			{
 				if (!(ph->info->is_dead))
 				{
@@ -35,7 +33,6 @@ void
 				return (ph);
 			}
 		}
-		pthread_mutex_unlock(ph->info->lock);
 		if (ph->info->is_dead)
 			return (NULL);
 		usleep(100);
@@ -48,16 +45,14 @@ void
 	philo->t_meal = current_t();
 	philo_log(philo->info, get_t_diff(philo->info->t_start),
 		philo->id + 1, EAT);
-	ms_sleep((philo)->info->t_eat);
+	ms_sleep(philo->info->t_eat, philo->info->t_start);
 	drop_forks(*philo);
 }
 
 void
 	ph_sleep(t_philo *philo)
 {
-	philo_log(philo->info, get_t_diff(philo->info->t_start),
-		philo->id + 1, SLEEP);
-	ms_sleep(philo->info->t_sleep);
+	ms_sleep(philo->info->t_sleep, philo->info->t_start);
 }
 
 void
@@ -76,6 +71,7 @@ void
 
 	philo = (t_philo *)p;
 	pthread_create(&life_thread, NULL, &life_checker, philo);
+	shift_odd_philos(philo);
 	while (philo->have_eaten != philo->info->n_meals)
 	{
 		take_forks(*philo);

@@ -41,14 +41,14 @@ void
 void
 	check_if_all_full(t_info *info)
 {
-	pthread_mutex_lock(info->lock);
 	if (info->n_full_philos == info->n_philos)
 	{
+		pthread_mutex_lock(info->lock);
 		if (!info->is_dead)
 		{
 			printf("All philosophers have completed their meal\n");
 			info->is_dead = true;
 		}
+		pthread_mutex_unlock(info->lock);
 	}
-	pthread_mutex_unlock(info->lock);
 }

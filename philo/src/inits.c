@@ -13,13 +13,13 @@
 #include "../include/philo.h"
 
 void
-	init_info(const int *arr, uint64_t start, t_info *info)
+	init_info(const int *arr, struct timeval start, t_info *info)
 {
 	info->n_philos = arr[0];
 	info->t_die = arr[1];
 	info->t_eat = arr[2];
 	info->t_sleep = arr[3];
-	info->t_start = 0;
+	info->t_start = (struct timeval){0};
 	if (arr[4] >= 0)
 		info->n_meals = arr[4];
 	else
@@ -53,12 +53,10 @@ void
 void
 	create_philos(int arr[], t_philo *ph_arr, pthread_mutex_t *forks)
 {
-	struct timeval	tv;
-	uint64_t		start;
+	struct timeval	start;
 	t_info			*info;
 
-	gettimeofday(&tv, NULL);
-	start = tv_to_ms(tv);
+	gettimeofday(&start, NULL);
 	info = (t_info *) malloc(sizeof(t_info));
 	init_info(arr, start, info);
 	init_philos(arr[0], ph_arr, forks, info);

@@ -12,44 +12,45 @@
 
 #include "../include/philo.h"
 
-uint64_t
-	tv_to_ms(struct timeval tv)
-{
-	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
-}
-
-uint64_t
+struct timeval
 	current_t(void)
 {
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
-	return (tv_to_ms(tv));
+	return (tv);
 }
 
 void
-	ms_sleep(uint64_t t_sleep)
+	ms_sleep(uint64_t t_sleep, struct timeval start)
 {
-	struct timeval	tv;
-	uint64_t		start_t;
+	uint64_t	start_ts;
+	uint64_t	sleep_time;
 
-	gettimeofday(&tv, NULL);
-	start_t = tv_to_ms(tv);
-	while (true)
-	{
-		usleep(50);
-		if (current_t() - start_t >= t_sleep)
-			return ;
-	}
+	start_ts = get_t_diff(start);
+	sleep_time = start_ts + t_sleep;
+	while (get_t_diff(start) < sleep_time)
+		usleep(100);
 }
 
 uint64_t
-	get_t_diff(uint64_t start)
+	get_t_diff(struct timeval start)
 {
 	struct timeval	tv;
-	uint64_t		time_now;
+	uint64_t		sec;
+	uint64_t		ms;
+	uint64_t		ms_final;
 
 	gettimeofday(&tv, NULL);
-	time_now = tv_to_ms(tv);
-	return (time_now - start);
+	sec = tv.tv_sec - start.tv_sec;
+	ms = tv.tv_usec - start.tv_usec;
+	ms_final = sec * 1000000 + ms;
+	return (ms_final / 1000);
+}
+
+void
+	shift_odd_philos(const t_philo *philo)
+{
+	if (philo->id % 2)
+		usleep(200);
 }

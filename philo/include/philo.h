@@ -38,7 +38,7 @@ typedef struct s_info {
 	int				t_eat;
 	int				t_sleep;
 	int				n_meals;
-	uint64_t		t_start;
+	struct timeval	t_start;
 	bool			is_dead;
 	pthread_mutex_t	*lock;
 	int				n_full_philos;
@@ -47,17 +47,16 @@ typedef struct s_info {
 typedef struct s_philo {
 	int				id;
 	int				have_eaten;
-	uint64_t		t_meal;
+	struct timeval	t_meal;
 	t_info			*info;
 	pthread_t		pthread;
 	pthread_mutex_t	*forks;
 }	t_philo;
 
 int				ft_atoi(const char *str);
-uint64_t		tv_to_ms(struct timeval tv);
-void			ms_sleep(uint64_t t_sleep);
-uint64_t		get_t_diff(uint64_t start);
-uint64_t		current_t(void );
+void			ms_sleep(uint64_t t_sleep, struct timeval start);
+uint64_t		get_t_diff(struct timeval start);
+struct timeval	current_t(void );
 void			launch_threads(t_philo *ph_arr, int n_philos);
 void			join_threads(t_philo *ph_arr, int n_philos);
 void			*philo_life(void *p);
@@ -71,5 +70,6 @@ void			philo_log_death(uint64_t t_stamp, int ph_id);
 void			check_if_all_full(t_info *info);
 void			create_philos(int arr[], t_philo *ph_arr,
 					pthread_mutex_t *forks);
+void			shift_odd_philos(const t_philo *philo);
 
 #endif
