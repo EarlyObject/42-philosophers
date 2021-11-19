@@ -12,17 +12,26 @@
 
 #include "../include/philo.h"
 
-struct timeval
+/*struct timeval
 	current_t(void)
 {
 	struct timeval	tv;
 
 	gettimeofday(&tv, NULL);
 	return (tv);
+}*/
+
+uint64_t
+	current_t(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * (uint64_t)1000 + (tv.tv_usec / 1000));
 }
 
 void
-	ms_sleep(uint64_t t_sleep, struct timeval start)
+	ms_sleep(uint64_t t_sleep, uint64_t start)
 {
 	uint64_t	start_ts;
 	uint64_t	sleep_time;
@@ -33,7 +42,7 @@ void
 		usleep(100);
 }
 
-uint64_t
+/*uint64_t
 	get_t_diff(struct timeval start)
 {
 	struct timeval	tv;
@@ -46,6 +55,12 @@ uint64_t
 	ms = tv.tv_usec - start.tv_usec;
 	ms_final = sec * 1000000 + ms;
 	return (ms_final / 1000);
+}*/
+
+uint64_t
+	get_t_diff(uint64_t start)
+{
+	return (current_t() - start);
 }
 
 void

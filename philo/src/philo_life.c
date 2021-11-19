@@ -43,8 +43,8 @@ void
 	ph_eat(t_philo *philo)
 {
 	philo->t_meal = current_t();
-	philo_log(philo->info, get_t_diff(philo->info->t_start),
-		philo->id + 1, EAT);
+	philo_log(philo->info, philo,
+			  philo->id + 1, EAT);
 	ms_sleep(philo->info->t_eat, philo->info->t_start);
 	drop_forks(*philo);
 }
@@ -58,8 +58,8 @@ void
 void
 	ph_think(t_philo *philo)
 {
-	philo_log(philo->info, get_t_diff(philo->info->t_start),
-		philo->id + 1, THINK);
+	philo_log(philo->info, philo,
+			  philo->id + 1, THINK);
 	usleep(100);
 }
 

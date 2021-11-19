@@ -81,7 +81,7 @@ int
 		if (parse_args(argc, argv, arr))
 		{
 			forks = create_forks(arr[0]);
-			ph_arr = (t_philo *)malloc(sizeof(t_philo *) * arr[0]);
+			ph_arr = (t_philo *)malloc(sizeof(t_philo) * arr[0]);
 			create_philos(arr, ph_arr, forks);
 			launch_threads(ph_arr, arr[0]);
 			join_threads(ph_arr, arr[0]);
