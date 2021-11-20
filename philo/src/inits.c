@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/09 19:08:29 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/10 13:43:44 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/21 09:57:54 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,6 @@ void
 		ph_arr[i].t_meal = 0;
 		ph_arr[i].info = info;
 		ph_arr[i].forks = forks;
-		pthread_mutex_init(&ph_arr[i].print, NULL);
 		ph_arr[i].ph_arr = ph_arr;
 		i++;
 	}

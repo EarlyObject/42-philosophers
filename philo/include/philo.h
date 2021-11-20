@@ -6,7 +6,7 @@
 /*   By: asydykna <asydykna@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/02 11:27:51 by asydykna          #+#    #+#             */
-/*   Updated: 2021/11/10 13:43:39 by asydykna         ###   ########.fr       */
+/*   Updated: 2021/11/21 09:57:51 by asydykna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_philo {
 	t_info			*info;
 	pthread_t		pthread;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	print;
 	struct s_philo	*ph_arr;
 }	t_philo;
 
