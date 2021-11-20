@@ -12,15 +12,6 @@
 
 #include "../include/philo.h"
 
-/*struct timeval
-	current_t(void)
-{
-	struct timeval	tv;
-
-	gettimeofday(&tv, NULL);
-	return (tv);
-}*/
-
 uint64_t
 	current_t(void)
 {
@@ -30,42 +21,67 @@ uint64_t
 	return (tv.tv_sec * (uint64_t)1000 + (tv.tv_usec / 1000));
 }
 
-void
-	ms_sleep(uint64_t t_sleep, uint64_t start)
-{
-	uint64_t	start_ts;
-	uint64_t	sleep_time;
-
-	start_ts = get_t_diff(start);
-	sleep_time = start_ts + t_sleep;
-	while (get_t_diff(start) < sleep_time)
-		usleep(100);
-}
-
-/*uint64_t
-	get_t_diff(struct timeval start)
-{
-	struct timeval	tv;
-	uint64_t		sec;
-	uint64_t		ms;
-	uint64_t		ms_final;
-
-	gettimeofday(&tv, NULL);
-	sec = tv.tv_sec - start.tv_sec;
-	ms = tv.tv_usec - start.tv_usec;
-	ms_final = sec * 1000000 + ms;
-	return (ms_final / 1000);
-}*/
-
 uint64_t
 	get_t_diff(uint64_t start)
 {
-	return (current_t() - start);
+	uint64_t		time;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	time = ((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000));
+	return (time - start);
 }
 
 void
-	shift_odd_philos(const t_philo *philo)
+	life_indicator(t_info *info, t_philo *p)
 {
-	if (philo->id % 2)
-		usleep(200);
+	uint64_t	t_from_start;
+	t_philo		philo;
+	int			i;
+
+	t_from_start = get_t_diff(info->t_start);
+	i = 0;
+	while (i < info->n_philos)
+	{
+		philo = p->ph_arr[i];
+		if (t_from_start - philo.t_meal > info->t_die)
+		{
+			if (!philo.info->is_dead)
+			{
+				philo.info->is_dead = true;
+				philo_log_death(philo.id + 1, info);
+				return ;
+			}
+		}
+		i++;
+	}
+}
+
+void
+	ms_sleep(uint64_t t_sleep, t_philo *philo)
+{
+	uint64_t		t_limit;
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	t_limit = ((tv.tv_sec * (uint64_t)1000)
+			   + (tv.tv_usec / 1000)) + t_sleep;
+	while (true)
+	{
+		life_indicator(philo->info, philo);
+		usleep(philo->info->n_philos);
+		gettimeofday(&tv, NULL);
+		if (((tv.tv_sec * (uint64_t)1000) + (tv.tv_usec / 1000)) >= t_limit)
+			break ;
+	}
+}
+
+void
+	philo_log_fork(t_info *info, int ph_id)
+{
+	uint64_t	t_stamp;
+
+	t_stamp = get_t_diff(info->t_start);
+	if (!info->is_dead)
+		printf("%llu %d %s\n", t_stamp, ph_id, FORK_MSG);
 }

@@ -17,11 +17,19 @@ void
 {
 	int	i;
 
+	i = 1;
+	while (i < n_philos)
+	{
+		pthread_create(&ph_arr[i].pthread, NULL, &philo_life, &ph_arr[i]);
+		i += 2;
+		usleep(210 - ph_arr->info->n_philos);
+	}
 	i = 0;
 	while (i < n_philos)
 	{
 		pthread_create(&ph_arr[i].pthread, NULL, &philo_life, &ph_arr[i]);
-		i++;
+		i += 2;
+		usleep(210 - ph_arr->info->n_philos);
 	}
 }
 
@@ -46,7 +54,6 @@ void
 		pthread_mutex_lock(info->lock);
 		if (!info->is_dead)
 		{
-			printf("All philosophers have completed their meal\n");
 			info->is_dead = true;
 		}
 		pthread_mutex_unlock(info->lock);

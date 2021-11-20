@@ -13,7 +13,7 @@
 #include "../include/philo.h"
 
 void
-	init_info(const int *arr, uint64_t start, t_info *info)
+	init_info(const int *arr, t_info *info)
 {
 	info->n_philos = arr[0];
 	info->t_die = arr[1];
@@ -24,7 +24,6 @@ void
 		info->n_meals = arr[4];
 	else
 		info->n_meals = -1;
-	info->t_start = start;
 	info->is_dead = false;
 	info->lock = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t));
 	if (pthread_mutex_init(info->lock, NULL))
@@ -43,10 +42,11 @@ void
 	{
 		ph_arr[i].id = i;
 		ph_arr[i].have_eaten = 0;
-		ph_arr[i].t_meal = info->t_start;
+		ph_arr[i].t_meal = 0;
 		ph_arr[i].info = info;
 		ph_arr[i].forks = forks;
 		pthread_mutex_init(&ph_arr[i].print, NULL);
+		ph_arr[i].ph_arr = ph_arr;
 		i++;
 	}
 }
@@ -55,11 +55,9 @@ void
 	create_philos(int arr[], t_philo *ph_arr, pthread_mutex_t *forks)
 {
 	t_info			*info;
-	uint64_t		t_start;
 
-	t_start = current_t();
 	info = (t_info *) malloc(sizeof(t_info));
-	init_info(arr, t_start, info);
+	init_info(arr, info);
 	init_philos(arr[0], ph_arr, forks, info);
 }
 
